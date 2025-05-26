@@ -1,0 +1,39 @@
+services:
+    backend:
+        build:
+            context: ./backend
+            dockerfile: Dockerfile
+        ports:
+            - "3000:3000"
+        volumes:
+            - ./backend:/app
+        networks:
+            - my_network
+
+    frontend:
+        build:
+            context: ./frontend
+            dockerfile: Dockerfile
+        ports:
+            - "5004:5004"
+        volumes:
+            - ./frontend:/app
+            - /app/node_modules
+        depends_on:
+            - backend
+        networks:
+            - my_network
+
+    nginx:
+        build:
+            context: ./nginx
+        ports:
+            - "5003:5003"
+        networks:
+            - my_network
+        depends_on:
+            - frontend
+
+networks:
+    my_network:
+        external: true
