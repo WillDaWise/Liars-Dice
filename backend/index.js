@@ -26,11 +26,16 @@ const handleMessage = (bytes, uuid) => {
     user.state = message
     // note: can instead do like user.state.x=message.x, etc
     broadcastUsers()
-    console.log(message)
+    console.log(`${user.username} updated their state: ${JSON.stringify(user.state)}`)
 }
 
 const handleClose = uuid => {
+    delete connections[uuid]
+    delete users[uuid]
+    console.log(`user ${uuid} disconnected`)
+    // send a message that says "user uuid is gone"
 
+    broadcastUsers()
 }
 
 wsServer.on("connection", (connection, request) => {
