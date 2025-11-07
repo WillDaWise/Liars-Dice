@@ -1,15 +1,15 @@
-import { useState } from "react"
+import { useState } from "react";
 
 export function Login({ onSubmit }) {
-  const [username, setUsername] = useState("")
+  const [username, setUsername] = useState("");
   return (
     <>
       <h1>Welcome</h1>
       <p>What should people call you?</p>
       <form
         onSubmit={(e) => {
-          e.preventDefault()
-          onSubmit(username)
+          e.preventDefault();
+          onSubmit(username);
         }}
       >
         <input
@@ -21,5 +21,5 @@ export function Login({ onSubmit }) {
         <input type="submit" />
       </form>
     </>
-  )
+  );
 }
