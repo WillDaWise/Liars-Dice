@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 // import throttle from "lodash.throttle";
 import Button from "./components/Button";
 import Value from "./components/Value";
+import Dice from "./components/Dice";
 
 // import { Cursor } from "./components/cursor";
 
@@ -114,9 +115,11 @@ export function Home({ username }) {
         >
           bean
         </Button>
+        <p>numBet:</p>
         <Value text={numBet}></Value>
+        <p>dicebet:</p>
         <Value text={diceBet}></Value>
-
+        <Dice number={numBet} count={diceBet}></Dice>
         <Button
           classname="btn btn-primary"
           text="+"
