@@ -1,14 +1,10 @@
 # Setup
 
-Run setup using
+run npm i
+navigate to backend, run npm i
+run node index.js
 
-`./setup.sh`
-
-Then run the app with
-
-`docker compose up --build`
-
-and access it at
-
-[localhost:5003/](localhost:5003/)
+in a new terminal, go to frontend.
+run npm i
+run npm run dev
 
