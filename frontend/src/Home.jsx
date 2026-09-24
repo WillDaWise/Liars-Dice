@@ -54,7 +54,7 @@ export function Home({ username }) {
     queryParams: { username },
   });
 
-  const THROTTLE = 50; //in ms
+  // const THROTTLE = 50; in ms
   // const sendJsonMessageThrottled = useRef(throttle(sendJsonMessage, THROTTLE));
   const [diceBet, setDiceBet] = useState(1);
   const [numBet, setNumBet] = useState(1);
