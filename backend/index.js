@@ -10,14 +10,26 @@ const port = 8000
 
 const connections = { }
 const users = { }
+const diceRolls = { }
 activePlayer = ""
 
 const broadcastUsers = () => {
     Object.keys(connections).forEach(uuid => {
         const connection = connections[uuid]
-        const message = JSON.stringify({activePlayer: activePlayer, yourUuid: uuid, users: users})
+        const message = JSON.stringify({activePlayer: activePlayer, yourUuid: uuid, yourDice: diceRolls[uuid], users: users})
         connection.send(message)
     })
+}
+
+const rollDice = (count = 5, sides = 6) => {
+    console.log("count: " + count + ", sides: " + sides)
+    const dice = Array(count)
+    for(i = 0; i < count; i++) {
+        dice[i] = Math.floor(Math.random() * sides) + 1
+    }
+    dice.sort()
+    console.log("dice: " + dice)
+    return dice
 }
 
 const handleMessage = (bytes, uuid) => {
@@ -65,7 +77,7 @@ wsServer.on("connection", (connection, request) => {
     // use connections to send 'broadcast' ie send message to everyone
     // connection.send sends info to that user
     connections[uuid] = connection
-
+    diceRolls[uuid] = rollDice()
     users[uuid] = {
         username: username,
         state: {
