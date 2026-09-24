@@ -15,7 +15,7 @@ activePlayer = ""
 const broadcastUsers = () => {
     Object.keys(connections).forEach(uuid => {
         const connection = connections[uuid]
-        const message = JSON.stringify({activePlayer: activePlayer, users: users})
+        const message = JSON.stringify({activePlayer: activePlayer, yourUuid: uuid, users: users})
         connection.send(message)
     })
 }

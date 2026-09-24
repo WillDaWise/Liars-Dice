@@ -25,6 +25,7 @@ const renderUsersList = (users) => {
         return <li key={uuid}>{<><div>{users[uuid].username + ":"}</div> <Dice number={users[uuid].state.numBet} count={users[uuid].state.diceBet}></Dice></>}</li>;
       })}
     </ul>
+    
   );
 };
 
@@ -135,6 +136,7 @@ export function Home({ username }) {
           bean
         </Button>
         {renderUsersList(lastJsonMessage.users)}
+        <p>{JSON.stringify(lastJsonMessage)}</p>
       </>
     );
   }
