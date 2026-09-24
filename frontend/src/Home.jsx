@@ -22,7 +22,7 @@ const renderUsersList = (users) => {
   return (
     <ul>
       {Object.keys(users).map((uuid) => {
-        return <li key={uuid}>{JSON.stringify(users[uuid])}</li>;
+        return <li key={uuid}>{<><div>{users[uuid].username + ":"}</div> <Dice number={users[uuid].state.numBet} count={users[uuid].state.diceBet}></Dice></>}</li>;
       })}
     </ul>
   );
