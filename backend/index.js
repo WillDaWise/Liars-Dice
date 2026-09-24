@@ -10,11 +10,12 @@ const port = 8000
 
 const connections = { }
 const users = { }
+activePlayer = ""
 
 const broadcastUsers = () => {
     Object.keys(connections).forEach(uuid => {
         const connection = connections[uuid]
-        const message = JSON.stringify(users)
+        const message = JSON.stringify({activePlayer: activePlayer, users: users})
         connection.send(message)
     })
 }
@@ -30,6 +31,10 @@ const handleMessage = (bytes, uuid) => {
 }
 
 const handleClose = uuid => {
+    console.log(activePlayer)
+    if (activePlayer == uuid) {
+        nextActivePlayer();
+    }
     delete connections[uuid]
     delete users[uuid]
     console.log(`user ${uuid} disconnected`)
@@ -38,14 +43,25 @@ const handleClose = uuid => {
     broadcastUsers()
 }
 
+const nextActivePlayer = () => {
+    activeIndex = Object.keys(users).indexOf(activePlayer);
+    activePlayer = Object.keys(users)[(activeIndex + 1) % Object.keys(users).length]
+    console.log(activePlayer + " is now the active player")
+
+}
+
 wsServer.on("connection", (connection, request) => {
     // ws://localhost:8000?username=Steve
 
     const { username } = url.parse(request.url, true).query
     const uuid = uuidv4()
-    console.log(username)
-    console.log(uuid)
-
+    console.log(username + " has connected with uuid: " + uuid)
+    console.log(users)
+    console.log(Object.keys(users).length)
+    if (Object.keys(users).length == 0) {
+        activePlayer = uuid;
+    }
+    console.log(uuid + "connection" + activePlayer)
     // use connections to send 'broadcast' ie send message to everyone
     // connection.send sends info to that user
     connections[uuid] = connection
