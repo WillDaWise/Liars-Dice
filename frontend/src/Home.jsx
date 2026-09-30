@@ -35,25 +35,6 @@ const renderUsersList = (data) => {
 
 
 
-const renderUserInput = () => {
-  return (
-    <form action="Home.jsx">
-      <div>
-        <label for="diceCount">How many dice?</label>
-        <br></br>
-        <input type="text" id="diceCount" name="diceCount" required></input>
-        <br></br>
-      </div>
-      <div>
-        <label for="diceNum">What number on the dice?</label>
-        <br></br>
-        <input type="text" id="diceNum" name="diceNum" required></input>
-        <br></br>
-      </div>
-      <input type="submit" value="Submit"></input>
-    </form>
-  );
-};
 
 export function Home({ username }) {
   const WS_URL = "ws://localhost:8000";
@@ -66,21 +47,20 @@ export function Home({ username }) {
   const [diceBet, setDiceBet] = useState(1);
   const [numBet, setNumBet] = useState(1);
 
-  function changeNumBet(bet, amount) {
+  function changeNumBet(amount) {
     setNumBet((prevCount) => prevCount + amount);
     console.log("numbet chanbed by " + amount);
 
     return;
   }
 
-  function changeDiceBet(bet, amount) {
+  function changeDiceBet(amount) {
     setDiceBet((prevCount) => prevCount + amount);
     // further logic needed
     console.log("Dicebet changed by" + amount);
     return;
   }
 
-  let bet = { diceBet: 0, numBet: 0 };
   useEffect(() => {
     sendJsonMessage({ diceBet: diceBet, numBet: numBet });
     /*window.addEventListener("mousemove", (e) => {
@@ -103,22 +83,35 @@ export function Home({ username }) {
     // HERE
   }, [diceBet, numBet, sendJsonMessage]);
 
-  if (lastJsonMessage) {
+  useEffect(() => {
     console.log(lastJsonMessage);
+    if (lastJsonMessage && lastJsonMessage.extraMessage != "") {
+      let bet = lastJsonMessage.users[lastJsonMessage.yourUuid].state
+      if (bet.diceBet == diceBet && bet.numBet == numBet) {
+        sendJsonMessage(bet)
+      }
+      console.log(bet)
+      setDiceBet(bet.diceBet)
+      setNumBet(bet.numBet)
+      console.log("numBet: " + numBet + ", diceBet: " + diceBet)
+    }
+  }, [lastJsonMessage])
+
+  if (lastJsonMessage) {
+    
     return (
       <>
-        {renderUserInput(lastJsonMessage)}
         <Button
           classname="btn btn-primary"
           text="+"
-          toCall={() => changeNumBet(bet, 1)}
+          toCall={() => changeNumBet(1)}
         >
           bean
         </Button>
         <Button
           classname="btn btn-primary"
           text="-"
-          toCall={() => changeNumBet(bet, -1)}
+          toCall={() => changeNumBet(-1)}
         >
           bean
         </Button>
@@ -130,19 +123,19 @@ export function Home({ username }) {
         <Button
           classname="btn btn-primary"
           text="+"
-          toCall={() => changeDiceBet(bet, 1)}
+          toCall={() => changeDiceBet(1)}
         >
           bean
         </Button>
         <Button
           classname="btn btn-primary"
           text="-"
-          toCall={() => changeDiceBet(bet, -1)}
+          toCall={() => changeDiceBet(-1)}
         >
           bean
         </Button>
         {renderUsersList(lastJsonMessage)}
-        <p>{JSON.stringify(lastJsonMessage)}</p>
+        <pre>{JSON.stringify(lastJsonMessage, null, 2)}</pre>
       </>
     );
   }
