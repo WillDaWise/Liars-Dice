@@ -18,11 +18,15 @@ import Dice from "./components/Dice";
     })
 }*/
 
-const renderUsersList = (users) => {
+const renderUsersList = (data) => {
   return (
     <ul>
-      {Object.keys(users).map((uuid) => {
-        return <li key={uuid}>{<><div>{users[uuid].username + ":"}</div> <Dice number={users[uuid].state.numBet} count={users[uuid].state.diceBet}></Dice></>}</li>;
+      {Object.keys(data.users).map((uuid) => {
+        //extra = ":"
+        // if (uuid == users.activePlayer) {
+        //   extra = "(Active Player):"
+        // }
+        return <li key={uuid}>{<><div>{data.users[uuid].username + ((uuid == data.activePlayer) ? "(Active Player):" : ":")}</div> <Dice number={data.users[uuid].state.numBet} count={data.users[uuid].state.diceBet}></Dice></>}</li>;
       })}
     </ul>
     
@@ -137,7 +141,7 @@ export function Home({ username }) {
         >
           bean
         </Button>
-        {renderUsersList(lastJsonMessage.users)}
+        {renderUsersList(lastJsonMessage)}
         <p>{JSON.stringify(lastJsonMessage)}</p>
       </>
     );
