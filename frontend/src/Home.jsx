@@ -17,6 +17,7 @@ import Dice from "./components/Dice";
         )
     })
 }*/
+let sides = 6;
 
 const renderUsersList = (data) => {
   return (
@@ -53,6 +54,12 @@ export function Home({ username }) {
 
     return;
   }
+
+  function canChangeBet (face, count) {
+    return !(numBet + face <= sides && numBet + face > 0 && diceBet + count > 0)
+
+  }
+
 
   function changeDiceBet(amount) {
     setDiceBet((prevCount) => prevCount + amount);
@@ -106,12 +113,14 @@ export function Home({ username }) {
           classname="btn btn-primary"
           text="&uarr;"
           toCall={() => changeNumBet(1)}
+          disabled={canChangeBet(1, 0)}
         >
         </Button>
         <Button
           classname="btn btn-primary"
           text="&darr;"
           toCall={() => changeNumBet(-1)}
+          disabled={canChangeBet(-1, 0)}
         >
         </Button></p>
         <p style={{"font-size": "32px"}}><Dice number={numBet} count={diceBet}></Dice></p>
@@ -119,12 +128,14 @@ export function Home({ username }) {
           classname="btn btn-primary"
           text="+"
           toCall={() => changeDiceBet(1)}
+          disabled={canChangeBet(0, 1)}
         >
         </Button>
         <Button
           classname="btn btn-primary"
           text="-"
           toCall={() => changeDiceBet(-1)}
+          disabled={canChangeBet(0, -1)}
         >
         </Button></p>
         
@@ -136,3 +147,4 @@ export function Home({ username }) {
 
   return <h1>Hello, {username}</h1>;
 }
+
