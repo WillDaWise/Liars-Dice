@@ -122,7 +122,7 @@ export function Home({ username }) {
           toCall={() => changeNumBet(-1)}
           disabled={canChangeBet(-1, 0)}
         >
-        </Button></p>
+        </Button></p> 
         <p style={{"font-size": "200%"}}>Your Bet: <Dice number={numBet} count={diceBet}></Dice></p>
         <p>Number of dice: <Button
           classname="btn btn-primary"
