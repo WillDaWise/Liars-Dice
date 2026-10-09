@@ -3,7 +3,7 @@ const Dice = ({ number, count }) => {
     for (let i = 0; i < count; i++) {
         arr.push("[" + number + "]");
     }
-    return <p>{arr}</p>;
+    return arr;
     
 };
 

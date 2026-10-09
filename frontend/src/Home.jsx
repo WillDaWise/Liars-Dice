@@ -101,39 +101,33 @@ export function Home({ username }) {
     
     return (
       <>
-        <Button
+        
+        <p>Number on dice: <Button
           classname="btn btn-primary"
-          text="+"
+          text="&uarr;"
           toCall={() => changeNumBet(1)}
         >
-          bean
         </Button>
         <Button
           classname="btn btn-primary"
-          text="-"
+          text="&darr;"
           toCall={() => changeNumBet(-1)}
         >
-          bean
-        </Button>
-        <p>numBet:</p>
-        <Value text={numBet}></Value>
-        <p>dicebet:</p>
-        <Value text={diceBet}></Value>
-        <Dice number={numBet} count={diceBet}></Dice>
-        <Button
+        </Button></p>
+        <p style={{"font-size": "32px"}}><Dice number={numBet} count={diceBet}></Dice></p>
+        <p>Number of dice: <Button
           classname="btn btn-primary"
           text="+"
           toCall={() => changeDiceBet(1)}
         >
-          bean
         </Button>
         <Button
           classname="btn btn-primary"
           text="-"
           toCall={() => changeDiceBet(-1)}
         >
-          bean
-        </Button>
+        </Button></p>
+        
         {renderUsersList(lastJsonMessage)}
         <pre>{JSON.stringify(lastJsonMessage, null, 2)}</pre>
       </>
