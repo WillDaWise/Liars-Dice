@@ -34,6 +34,11 @@ const renderUsersList = (data) => {
   );
 };
 
+const renderYourDice = (data) => {
+  return (
+    <p style={{"font-size": "200%"}}>Your SECRET Dice Roll:<Dice inputarr={data.yourDice}></Dice></p>
+  )
+}
 
 
 
@@ -50,7 +55,6 @@ export function Home({ username }) {
 
   function changeNumBet(amount) {
     setNumBet((prevCount) => prevCount + amount);
-    console.log("numbet chanbed by " + amount);
 
     return;
   }
@@ -64,7 +68,6 @@ export function Home({ username }) {
   function changeDiceBet(amount) {
     setDiceBet((prevCount) => prevCount + amount);
     // further logic needed
-    console.log("Dicebet changed by" + amount);
     return;
   }
 
@@ -91,16 +94,13 @@ export function Home({ username }) {
   }, [diceBet, numBet, sendJsonMessage]);
 
   useEffect(() => {
-    console.log(lastJsonMessage);
     if (lastJsonMessage && lastJsonMessage.extraMessage != "") {
       let bet = lastJsonMessage.users[lastJsonMessage.yourUuid].state
       if (bet.diceBet == diceBet && bet.numBet == numBet) {
         sendJsonMessage(bet)
       }
-      console.log(bet)
       setDiceBet(bet.diceBet)
       setNumBet(bet.numBet)
-      console.log("numBet: " + numBet + ", diceBet: " + diceBet)
     }
   }, [lastJsonMessage])
 
@@ -123,7 +123,7 @@ export function Home({ username }) {
           disabled={canChangeBet(-1, 0)}
         >
         </Button></p>
-        <p style={{"font-size": "32px"}}><Dice number={numBet} count={diceBet}></Dice></p>
+        <p style={{"font-size": "200%"}}>Your Bet: <Dice number={numBet} count={diceBet}></Dice></p>
         <p>Number of dice: <Button
           classname="btn btn-primary"
           text="+"
@@ -138,7 +138,7 @@ export function Home({ username }) {
           disabled={canChangeBet(0, -1)}
         >
         </Button></p>
-        
+        {renderYourDice(lastJsonMessage)}
         {renderUsersList(lastJsonMessage)}
         <pre>{JSON.stringify(lastJsonMessage, null, 2)}</pre>
       </>
