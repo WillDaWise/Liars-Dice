@@ -147,14 +147,14 @@ export function Home({ username }) {
   useEffect(() => {
     if (lastJsonMessage && lastJsonMessage.extraMessage != "") {
       let bet = lastJsonMessage.users[lastJsonMessage.yourUuid].state
-      setDiceBet(bet.diceBet)
-      setNumBet(bet.numBet)
+      setDiceBet(Math.max(bet.diceBet, lastJsonMessage.minBet.diceBet))
+      setNumBet(Math.max(bet.numBet, lastJsonMessage.minBet.numBet))
       setPlacingBet(bet.placingBet)
     }
   }, [lastJsonMessage])
 
   if (lastJsonMessage) {
-    
+
     return (
       <>
         

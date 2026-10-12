@@ -14,7 +14,7 @@ const diceRolls = { }
 activePlayer = ""
 DEFAULT_COUNT = 5
 DEFAULT_SIDES = 6
-const minBet = { diceBet: 1, numBet: 1 }
+const minBet = { diceBet: 0, numBet: 0 }
 
 // TODO: calculate total dice 
 // TODO: add j'accuse
@@ -72,7 +72,7 @@ const validate = (bet, uuid) => {
             return "one bet must be above the minimum"
         }
     }
-    if (bet.numBet > DEFAULT_SIDES || bet.numBet <= 0 && bet.diceBet <= 0) {
+    if (bet.numBet > DEFAULT_SIDES || bet.numBet <= 0 || bet.diceBet <= 0) {
         return "bet not within bounds of dice"
     }
     return ""
