@@ -14,6 +14,10 @@ const diceRolls = { }
 activePlayer = ""
 DEFAULT_COUNT = 5
 DEFAULT_SIDES = 6
+const lowestBet = { diceBet: 1, numBet: 1 }
+
+// TODO: calculate total dice 
+// TODO: add j'accuse
 
 const broadcastUsers = () => {
     Object.keys(connections).forEach(uuid => {
@@ -42,9 +46,11 @@ const handleMessage = (bytes, uuid) => {
     const user = users[uuid]
     // if (messageType == Bet) -- something like this maybe for our project
     
-    if (!isValid(message)) {
-        console.log("invalid state fiund")
-        broadcastUser(uuid, "Invalid State")
+    if ((errmsg = validate(message, uuid)) != "") {
+        console.log(errmsg)
+        broadcastUser(uuid, errmsg)
+    } else if (message.placingBet) {
+        onBet()
     } else {
         user.state = message
         // note: can instead do like user.state.x=message.x, etc
@@ -54,8 +60,14 @@ const handleMessage = (bytes, uuid) => {
 }
 
 // to be updated with further logic
-const isValid = (bet) => {
-    return bet.numBet <= DEFAULT_SIDES && bet.numBet > 0 && bet.diceBet > 0
+const validate = (bet, uuid) => {
+    if (bet.placingBet && uuid != activePlayer) {
+        return "non-active player cannot place bet"
+    }
+    if (bet.numBet > DEFAULT_SIDES || bet.numBet <= 0 && bet.diceBet <= 0) {
+        return "bet not within bounds"
+    }
+    return ""
 }
 
 const handleClose = uuid => {
@@ -72,10 +84,24 @@ const handleClose = uuid => {
 }
 
 const nextActivePlayer = () => {
+    
     activeIndex = Object.keys(users).indexOf(activePlayer);
     activePlayer = Object.keys(users)[(activeIndex + 1) % Object.keys(users).length]
     console.log(activePlayer + " is now the active player")
+    // send message to active player with their new lowest bet
+    users[activePlayer].state = {placingBet : false, diceBet: lowestBet.diceBet, numBet: lowestBet.numBet }
+    broadcastUser(activePlayer, "You are the new active Player")
 
+    
+
+}
+
+const onBet = () => {
+    // TODO: update Lowest Bet
+    // TODO: check for valid bet
+    // send message to old active player saying their bet has been placed.
+    broadcastUser(activePlayer, "You are no longer the active player")
+    nextActivePlayer()
 }
 
 wsServer.on("connection", (connection, request) => {

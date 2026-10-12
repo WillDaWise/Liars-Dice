@@ -52,6 +52,7 @@ export function Home({ username }) {
   // const sendJsonMessageThrottled = useRef(throttle(sendJsonMessage, THROTTLE));
   const [diceBet, setDiceBet] = useState(1);
   const [numBet, setNumBet] = useState(1);
+  const [placingBet, setPlacingBet] = useState(false);
 
   function changeNumBet(amount) {
     setNumBet((prevCount) => prevCount + amount);
@@ -64,14 +65,23 @@ export function Home({ username }) {
 
   }
 
-
   function changeDiceBet(amount) {
     setDiceBet((prevCount) => prevCount + amount);
     // further logic needed
     return;
   }
 
-  function betArea() {
+  function changeBet (makeBet) {
+    setPlacingBet(makeBet)
+  }
+
+  function canPlaceBet (data) {
+    console.log(data);
+    
+    return (canChangeBet(0,0) && data.activePlayer == data.yourUuid)
+  }
+
+  function renderBetArea(data) {
     return (<><p>Number on dice: <Button
           classname="btn btn-primary"
           text="&uarr;"
@@ -100,11 +110,20 @@ export function Home({ username }) {
           toCall={() => changeDiceBet(-1)}
           disabled={canChangeBet(0, -1)}
         >
-        </Button></p></>)
+        </Button></p>
+        <Button
+          classname="btn btn-primary"
+          text="Place Bet"
+          toCall={() => changeBet(true)}
+          disabled={canPlaceBet(data)}
+        >
+
+        </Button>
+        </>)
   }
 
   useEffect(() => {
-    sendJsonMessage({ diceBet: diceBet, numBet: numBet });
+    sendJsonMessage({ placingBet: placingBet, diceBet: diceBet, numBet: numBet });
     /*window.addEventListener("mousemove", (e) => {
       // send
       sendJsonMessageThrottled.current({
@@ -123,16 +142,14 @@ export function Home({ username }) {
     //});
     // increaseDiceButton.addEventListener("Click", changeDiceBet);
     // HERE
-  }, [diceBet, numBet, sendJsonMessage]);
+  }, [placingBet, diceBet, numBet, sendJsonMessage]);
 
   useEffect(() => {
     if (lastJsonMessage && lastJsonMessage.extraMessage != "") {
       let bet = lastJsonMessage.users[lastJsonMessage.yourUuid].state
-      if (bet.diceBet == diceBet && bet.numBet == numBet) {
-        sendJsonMessage(bet)
-      }
       setDiceBet(bet.diceBet)
       setNumBet(bet.numBet)
+      setPlacingBet(bet.placingBet)
     }
   }, [lastJsonMessage])
 
@@ -141,7 +158,7 @@ export function Home({ username }) {
     return (
       <>
         
-        {betArea()}
+        {renderBetArea(lastJsonMessage)}
         {renderYourDice(lastJsonMessage)}
         {renderUsersList(lastJsonMessage)}
         <pre>{JSON.stringify(lastJsonMessage, null, 2)}</pre>
