@@ -14,7 +14,7 @@ const diceRolls = { }
 activePlayer = ""
 DEFAULT_COUNT = 5
 DEFAULT_SIDES = 6
-const lowestBet = { diceBet: 1, numBet: 1 }
+const minBet = { diceBet: 1, numBet: 1 }
 
 // TODO: calculate total dice 
 // TODO: add j'accuse
@@ -27,7 +27,7 @@ const broadcastUsers = () => {
 
 const broadcastUser = (uuid, extraMessage = "") => {
     const connection = connections[uuid]
-    const message = JSON.stringify({extraMessage: extraMessage, activePlayer: activePlayer, yourUuid: uuid, yourDice: diceRolls[uuid], users: users})
+    const message = JSON.stringify({extraMessage: extraMessage, minBet: minBet, activePlayer: activePlayer, yourUuid: uuid, yourDice: diceRolls[uuid], users: users})
     connection.send(message)
 }
 
@@ -61,11 +61,19 @@ const handleMessage = (bytes, uuid) => {
 
 // to be updated with further logic
 const validate = (bet, uuid) => {
-    if (bet.placingBet && uuid != activePlayer) {
-        return "non-active player cannot place bet"
+    if (bet.placingBet) {
+        if (uuid != activePlayer) {
+            return "non-active player cannot place bet"
+        }
+        if (bet.diceBet < minBet.diceBet || bet.numBet < minBet.numBet) {
+            return "bets cannot be below the minimum"
+        }
+        if (bet.diceBet == minBet.diceBet && bet.numBet == minBet.numBet) {
+            return "one bet must be above the minimum"
+        }
     }
     if (bet.numBet > DEFAULT_SIDES || bet.numBet <= 0 && bet.diceBet <= 0) {
-        return "bet not within bounds"
+        return "bet not within bounds of dice"
     }
     return ""
 }
@@ -89,16 +97,19 @@ const nextActivePlayer = () => {
     activePlayer = Object.keys(users)[(activeIndex + 1) % Object.keys(users).length]
     console.log(activePlayer + " is now the active player")
     // send message to active player with their new lowest bet
-    users[activePlayer].state = {placingBet : false, diceBet: lowestBet.diceBet, numBet: lowestBet.numBet }
+    users[activePlayer].state = { placingBet: false, diceBet: minBet.diceBet, numBet: minBet.numBet }
     broadcastUser(activePlayer, "You are the new active Player")
-
     
 
 }
 
+// precondition: bet is valid
 const onBet = () => {
     // TODO: update Lowest Bet
-    // TODO: check for valid bet
+    minBet.diceBet = users[activePlayer].state.diceBet
+    minBet.numBet = users[activePlayer].state.numBet
+
+    // TODO: check for valid bet - done earlier
     // send message to old active player saying their bet has been placed.
     broadcastUser(activePlayer, "You are no longer the active player")
     nextActivePlayer()
