@@ -71,6 +71,38 @@ export function Home({ username }) {
     return;
   }
 
+  function betArea() {
+    return (<><p>Number on dice: <Button
+          classname="btn btn-primary"
+          text="&uarr;"
+          toCall={() => changeNumBet(1)}
+          disabled={canChangeBet(1, 0)}
+        >
+        </Button>
+        <Button
+          classname="btn btn-primary"
+          text="&darr;"
+          toCall={() => changeNumBet(-1)}
+          disabled={canChangeBet(-1, 0)}
+        >
+        </Button></p> 
+        <p style={{"font-size": "200%"}}>Your Bet: <Dice number={numBet} count={diceBet}></Dice></p>
+        <p>Number of dice: <Button
+          classname="btn btn-primary"
+          text="+"
+          toCall={() => changeDiceBet(1)}
+          disabled={canChangeBet(0, 1)}
+        >
+        </Button>
+        <Button
+          classname="btn btn-primary"
+          text="-"
+          toCall={() => changeDiceBet(-1)}
+          disabled={canChangeBet(0, -1)}
+        >
+        </Button></p></>)
+  }
+
   useEffect(() => {
     sendJsonMessage({ diceBet: diceBet, numBet: numBet });
     /*window.addEventListener("mousemove", (e) => {
@@ -109,35 +141,7 @@ export function Home({ username }) {
     return (
       <>
         
-        <p>Number on dice: <Button
-          classname="btn btn-primary"
-          text="&uarr;"
-          toCall={() => changeNumBet(1)}
-          disabled={canChangeBet(1, 0)}
-        >
-        </Button>
-        <Button
-          classname="btn btn-primary"
-          text="&darr;"
-          toCall={() => changeNumBet(-1)}
-          disabled={canChangeBet(-1, 0)}
-        >
-        </Button></p> 
-        <p style={{"font-size": "200%"}}>Your Bet: <Dice number={numBet} count={diceBet}></Dice></p>
-        <p>Number of dice: <Button
-          classname="btn btn-primary"
-          text="+"
-          toCall={() => changeDiceBet(1)}
-          disabled={canChangeBet(0, 1)}
-        >
-        </Button>
-        <Button
-          classname="btn btn-primary"
-          text="-"
-          toCall={() => changeDiceBet(-1)}
-          disabled={canChangeBet(0, -1)}
-        >
-        </Button></p>
+        {betArea()}
         {renderYourDice(lastJsonMessage)}
         {renderUsersList(lastJsonMessage)}
         <pre>{JSON.stringify(lastJsonMessage, null, 2)}</pre>
