@@ -1,5 +1,5 @@
 const http = require('http')
-const { WebSocketServer } = require("ws")
+const { WebSocketServer } = require("node_modules/ws")
 
 const url = require('url')
 const uuidv4 = require('uuid').v4

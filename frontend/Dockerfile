@@ -1,6 +1,6 @@
 FROM node:22-bookworm
 
-WORKDIR /app
+WORKDIR /frontend
 
 COPY package*.json ./
 
