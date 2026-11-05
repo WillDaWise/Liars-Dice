@@ -28,7 +28,7 @@ services:
         build:
             context: ./nginx
         ports:
-            - "5003:5003"
+            - "80:80"
         networks:
             - my_network
         depends_on:
